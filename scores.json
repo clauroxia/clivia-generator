@@ -1,1 +1,6 @@
-[{"name":"Clau","score":20}]
+[
+  { "name": "Paola", "score": 30 },
+  { "name": "Hola", "score": 60 },
+  { "name": "Anonymous", "score": 20 },
+  { "name": "Anonymous", "score": 30 }
+]

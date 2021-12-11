@@ -13,19 +13,18 @@ class CliviaGenerator
     # we need to initialize a couple of properties here
     @@name.empty? ? @filename = "scores.json" : @filename = @@name
     @score = 0
-    @hash = Array.new
-    @parse_json = JSON.parse(File.read(@filename))
+    @hash = JSON.parse(File.read(@filename), {symbolize_names: true})
 
   end
 
   def start
-    print_welcome
     action = ""
     until action == "exit"
+      print_welcome
       action = select_main_menu_action
       case action
       when "random" then random_trivia
-      when "scores" then print_score
+      when "scores" then print_score(@hash)
       end
     end
   end
@@ -61,15 +60,16 @@ class CliviaGenerator
     # write to file the scores data
   end
 
+  def load_data
+    JSON.parse(File.read(@filename), {symbolize_names: true})
+  end
+
   def parse_scores
     # get the scores data from file
   end
 
   def load_questions
-    # ask the api for a random set of questions
-    # then parse the questions
     response = HTTParty.get("https://opentdb.com/api.php?amount=10")
-    # raise(HTTParty::ResponseError, response) unless response.success?
     JSON.parse(response.body, symbolize_names: true)
   end
 

@@ -1,25 +1,54 @@
-# do not forget to require your gem dependencies
-# do not forget to require_relative your local dependencies
+require "httparty"
+require "htmlentities"
+require_relative "presenter"
+require_relative "requester"
+
 
 class CliviaGenerator
-  # maybe we need to include a couple of modules?
-
+  include Presenter
+  include Requester
+  include HTTParty
+  @@name = ARGV
   def initialize
     # we need to initialize a couple of properties here
+    @@name.empty? ? @filename = "scores.json" : @filename = @@name
+    @score = 0
+    @hash = Array.new
+    @parse_json = JSON.parse(File.read(@filename))
+
   end
 
   def start
-    # welcome message
-    # prompt the user for an action
-    # keep going until the user types exit
+    print_welcome
+    action = ""
+    until action == "exit"
+      action = select_main_menu_action
+      case action
+      when "random" then random_trivia
+      when "scores" then print_score
+      end
+    end
   end
 
   def random_trivia
     # load the questions from the api
+    questions = load_questions[:results]
+    # pp questions
     # questions are loaded, then let's ask them
+    questions.map do |question|
+      ask_question(question)
+    end
+    will_save?(@score)
   end
 
-  def ask_questions
+  def ask_questions(option, number_option, correct_answer)
+    if option[number_option] == correct_answer
+      puts "#{option[number_option]}... Correct!"
+      @score += 10
+    else
+      puts "#{option[number_option]}... Incorrect!"
+      puts "The correct answer was: #{correct_answer}"
+    end
     # ask each question
     # if response is correct, put a correct message and increase score
     # if response is incorrect, put an incorrect message, and which was the correct answer
@@ -27,6 +56,8 @@ class CliviaGenerator
   end
 
   def save(data)
+    @hash.push(data)
+    File.write(@filename, @hash.to_json)
     # write to file the scores data
   end
 
@@ -37,10 +68,14 @@ class CliviaGenerator
   def load_questions
     # ask the api for a random set of questions
     # then parse the questions
+    response = HTTParty.get("https://opentdb.com/api.php?amount=10")
+    # raise(HTTParty::ResponseError, response) unless response.success?
+    JSON.parse(response.body, symbolize_names: true)
   end
 
   def parse_questions
     # questions came with an unexpected structure, clean them to make it usable for our purposes
+    
   end
 
   def print_scores

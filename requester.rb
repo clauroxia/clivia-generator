@@ -18,7 +18,7 @@ module Requester
     alternatives.push(question[:correct_answer])
     correct_answer = question[:correct_answer]
     id = 0
-    option = Hash.new
+    option = {}
     alternatives.shuffle.each do |alternative|
       puts "#{id = id.next}. #{coder.decode(alternative)}"
       option[id] = alternative
@@ -27,7 +27,6 @@ module Requester
     print "> "
     number_option = gets.chomp.to_i
     ask_questions(option, number_option, correct_answer)
-  
   end
 
   def will_save?(score)
@@ -41,7 +40,7 @@ module Requester
       print "> "
       score_name = gets.chomp.capitalize
       score_name = "Anonymous" if score_name.empty?
-      save({name: score_name, score: score})
+      save({ name: score_name, score: score })
     end
     # prompt the user to give the score a name if there is no name given, set it as Anonymous
   end

@@ -10,10 +10,9 @@ class CliviaGenerator
   @@name = ARGV
   def initialize
     # we need to initialize a couple of properties here
-    @@name.empty? ? @filename = "scores.json" : @filename = @@name
+    @filename = @@name.empty? ? "scores.json" : @@name
     @score = 0
-    @hash = JSON.parse(File.read(@filename), {symbolize_names: true} )
-
+    @hash = JSON.parse(File.read(@filename), { symbolize_names: true })
   end
 
   def start
@@ -60,7 +59,7 @@ class CliviaGenerator
   end
 
   def load_data
-    JSON.parse(File.read(@filename), {symbolize_names: true})
+    JSON.parse(File.read(@filename), { symbolize_names: true })
   end
 
   def parse_scores

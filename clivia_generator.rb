@@ -3,7 +3,6 @@ require "htmlentities"
 require_relative "presenter"
 require_relative "requester"
 
-
 class CliviaGenerator
   include Presenter
   include Requester
@@ -13,7 +12,7 @@ class CliviaGenerator
     # we need to initialize a couple of properties here
     @@name.empty? ? @filename = "scores.json" : @filename = @@name
     @score = 0
-    @hash = JSON.parse(File.read(@filename), {symbolize_names: true})
+    @hash = JSON.parse(File.read(@filename), {symbolize_names: true} )
 
   end
 
@@ -75,7 +74,6 @@ class CliviaGenerator
 
   def parse_questions
     # questions came with an unexpected structure, clean them to make it usable for our purposes
-    
   end
 
   def print_scores
